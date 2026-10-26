@@ -412,6 +412,7 @@ async fn main(spawner: Spawner) {
                 current_volume = vol;
                 set_volume!(spi_cell, spi_config, x_cs, dreq, vol);
             }
+            wifi::PlayerCommand::Seek(_) => {}
             wifi::PlayerCommand::Stop => {}
 
             wifi::PlayerCommand::TogglePlay => {
@@ -522,6 +523,14 @@ async fn main(spawner: Spawner) {
                                         current_volume = vol;
                                         set_volume!(spi_cell, spi_config, x_cs, dreq, vol);
                                         set_spi_freq!(spi_cell, spi_config, 8_000_000);
+                                    }
+                                    wifi::PlayerCommand::Seek(pct) => {
+                                        let pct = pct.min(100) as u64;
+                                        let target = ((file_size as u64 * pct) / 100) as u32;
+                                        let target = target.min(file_size);
+                                        if file.seek_from_start(target).is_ok() {
+                                            file_pos = target;
+                                        }
                                     }
                                     wifi::PlayerCommand::Play(new_f) => {
                                         normal_play_count = 0;
