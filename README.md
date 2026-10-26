@@ -1,4 +1,5 @@
-# this project copy and modified from embassy examples/stm32f4 folder 
+# Note
+- this project copy and modified from embassy examples/stm32f4 folder 
 
 # STM32 VS1053 MP3 Player
 
